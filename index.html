@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USA Meme Generator</title>
+<meta name="description" content="Генератор мемов в американском стиле: 4 шаблона, PNG одним кликом.">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@700;900&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root {
+    --red: #b22234;
+    --red-dark: #8a1a28;
+    --blue: #0a3161;
+    --blue-dark: #061f40;
+    --cream: #f7f1e3;
+    --gold: #f2c14e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Oswald', sans-serif;
+    background: var(--cream);
+    color: var(--blue-dark);
+    line-height: 1.5;
+}
+.stripe {
+    height: 14px;
+    background: repeating-linear-gradient(90deg, var(--red) 0 40px, #fff 40px 80px, var(--blue) 80px 120px);
+}
+
+/* ===== Hero ===== */
+.hero {
+    position: relative;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.08) 0 2px, transparent 3px) 0 0/48px 48px,
+        linear-gradient(160deg, var(--blue) 0%, var(--blue-dark) 100%);
+    color: #fff;
+    text-align: center;
+    padding: 90px 6% 110px;
+    overflow: hidden;
+}
+.hero::after {
+    content: '';
+    position: absolute; left: 0; right: 0; bottom: 0; height: 40px;
+    background: repeating-linear-gradient(180deg, var(--red) 0 8px, #fff 8px 16px);
+    opacity: .95;
+}
+.badge {
+    display: inline-block;
+    font-size: .85rem; letter-spacing: .3em; text-transform: uppercase;
+    border: 2px solid var(--gold); color: var(--gold);
+    padding: 6px 18px; margin-bottom: 26px;
+}
+h1 {
+    font-family: 'Anton', 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: clamp(2.8rem, 9vw, 7rem);
+    line-height: .98;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 5px 5px 0 var(--red);
+}
+h1 span { color: var(--gold); }
+.hero p {
+    max-width: 560px; margin: 26px auto 34px;
+    font-size: 1.2rem; color: #d6e0f0;
+}
+.btn {
+    display: inline-block; cursor: pointer; border: none;
+    font-family: 'Anton', 'Oswald', sans-serif; letter-spacing: 2px; text-transform: uppercase;
+    font-size: 1.15rem; padding: 15px 34px;
+    background: var(--red); color: #fff; text-decoration: none;
+    border-bottom: 5px solid var(--red-dark);
+    transition: transform .12s, filter .12s;
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+.btn.alt { background: var(--blue); border-bottom-color: var(--blue-dark); }
+.btn.ghost { background: transparent; color: var(--blue); border: 3px solid var(--blue); }
+.stars-row { margin-top: 44px; letter-spacing: 14px; color: var(--gold); font-size: 1.2rem; }
+
+/* ===== Generator ===== */
+.generator { max-width: 1180px; margin: 0 auto; padding: 80px 5% 90px; }
+.section-title {
+    font-family: 'Anton', 'Oswald', sans-serif; font-weight: 400;
+    font-size: clamp(2rem, 5vw, 3.4rem); text-transform: uppercase;
+    color: var(--blue); text-align: center; margin-bottom: 8px;
+}
+.section-sub { text-align: center; color: #555; margin-bottom: 44px; }
+
+.templates {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 40px;
+}
+.tpl {
+    background: #fff; border: 3px solid var(--blue); padding: 8px; cursor: pointer;
+    text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+    font-size: .9rem; color: var(--blue); transition: transform .15s, box-shadow .15s;
+    font-family: inherit;
+}
+.tpl canvas { width: 100%; height: auto; display: block; margin-bottom: 8px; }
+.tpl:hover { transform: translateY(-3px); box-shadow: 5px 5px 0 var(--red); }
+.tpl.active { background: var(--blue); color: #fff; box-shadow: 6px 6px 0 var(--red); }
+
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.panel {
+    background: #fff; border: 3px solid var(--blue); padding: 28px;
+    box-shadow: 8px 8px 0 var(--red);
+}
+.panel label {
+    display: block; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; font-size: .85rem; color: var(--blue); margin: 18px 0 6px;
+}
+.panel label:first-child { margin-top: 0; }
+.panel input[type=text], .panel textarea {
+    width: 100%; padding: 12px 14px; font-family: inherit; font-size: 1.05rem;
+    border: 2px solid #c9ced8; background: var(--cream); color: var(--blue-dark);
+}
+.panel input[type=text]:focus, .panel textarea:focus { outline: none; border-color: var(--red); }
+.panel textarea { resize: vertical; min-height: 84px; }
+.hint { font-size: .85rem; color: #777; margin-top: 6px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.file-btn input { display: none; }
+.preview {
+    border: 3px solid var(--blue); background: var(--blue-dark); padding: 10px;
+    box-shadow: 8px 8px 0 var(--gold);
+}
+.preview canvas { width: 100%; height: auto; display: block; }
+
+/* ===== Footer ===== */
+footer { background: var(--blue-dark); color: #aab8d0; text-align: center; padding: 40px 6% 50px; font-size: .9rem; }
+footer b { color: var(--gold); letter-spacing: 2px; }
+footer p { max-width: 640px; margin: 10px auto 0; }
+
+@media (max-width: 860px) {
+    .workspace { grid-template-columns: minmax(0, 1fr); }
+    .templates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .preview { order: -1; }
+    .hero { padding: 64px 6% 90px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stripe"></div>
+
+<header class="hero">
+    <div class="badge">★ Made in the U.S.A. ★</div>
+    <h1>USA <span>Meme</span><br>Generator</h1>
+    <p>Четыре шаблона в духе американских плакатов, указов и новостей. Впиши текст — получи мем. Всё остаётся в браузере.</p>
+    <a href="#generator" class="btn">Сделать мем</a>
+    <div class="stars-row">★ ★ ★ ★ ★</div>
+</header>
+
+<main class="generator" id="generator">
+    <h2 class="section-title">Выбери шаблон</h2>
+    <p class="section-sub">Land of the free. Home of the memes.</p>
+
+    <div class="templates" id="templates"></div>
+
+    <div class="workspace">
+        <div class="panel">
+            <label for="t1" id="l1">Текст 1</label>
+            <input type="text" id="t1" maxlength="90">
+            <label for="t2" id="l2">Текст 2</label>
+            <textarea id="t2" maxlength="220"></textarea>
+            <p class="hint" id="hint"></p>
+
+            <div class="row">
+                <button class="btn alt" id="random">🎲 Случайная фраза</button>
+                <label class="btn ghost file-btn" id="uploadWrap">Свой фон
+                    <input type="file" id="upload" accept="image/*">
+                </label>
+                <button class="btn" id="download">⬇ Скачать PNG</button>
+            </div>
+        </div>
+
+        <div class="preview"><canvas id="canvas" width="1080" height="1080"></canvas></div>
+    </div>
+</main>
+
+<div class="stripe"></div>
+<footer>
+    <b>★ USA MEMES ★</b>
+    <p>Учебный проект для портфолио. Все фразы вымышлены и не являются реальными цитатами или новостями. Не связан ни с какими организациями.</p>
+</footer>
+
+<script>
+const W = 1080, H = 1080;
+const RED = '#b22234', BLUE = '#0a3161', NAVY = '#061f40', GOLD = '#f2c14e', CREAM = '#f7f1e3';
+
+/* ---------- helpers ---------- */
+function star(ctx, cx, cy, r) {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+        const a = -Math.PI / 2 + i * Math.PI / 5;
+        const rad = i % 2 ? r * 0.4 : r;
+        ctx[i ? 'lineTo' : 'moveTo'](cx + Math.cos(a) * rad, cy + Math.sin(a) * rad);
+    }
+    ctx.closePath(); ctx.fill();
+}
+
+function flag(ctx, x, y, w, h) {
+    const sh = h / 13;
+    for (let i = 0; i < 13; i++) {
+        ctx.fillStyle = i % 2 ? '#fff' : RED;
+        ctx.fillRect(x, y + i * sh, w, sh + 1);
+    }
+    const cw = w * 0.4, ch = sh * 7;
+    ctx.fillStyle = BLUE; ctx.fillRect(x, y, cw, ch);
+    ctx.fillStyle = '#fff';
+    for (let r = 0; r < 9; r++) {
+        const n = r % 2 ? 5 : 6;
+        for (let c = 0; c < n; c++) {
+            const px = x + cw / 12 * (r % 2 ? 2 + c * 2 : 1 + c * 2);
+            star(ctx, px, y + ch / 10 * (r + 1), ch / 32);
+        }
+    }
+}
+
+function cover(ctx, img, x, y, w, h) {
+    const s = Math.max(w / img.width, h / img.height);
+    const dw = img.width * s, dh = img.height * s;
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+    ctx.restore();
+}
+
+function wrap(ctx, text, maxW) {
+    const lines = []; let line = '';
+    text.split('\n').forEach(par => {
+        line = '';
+        par.split(/\s+/).filter(Boolean).forEach(word => {
+            const test = line ? line + ' ' + word : word;
+            if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = word; }
+            else line = test;
+        });
+        lines.push(line);
+    });
+    return lines;
+}
+
+/* Подбирает размер шрифта, чтобы текст влез в блок. Возвращает {lines, size, lh} */
+function fit(ctx, text, fontFn, maxW, maxH, max = 140, min = 24, lhK = 1.1) {
+    for (let s = max; s >= min; s -= 2) {
+        ctx.font = fontFn(s);
+        const lines = wrap(ctx, text, maxW);
+        if (lines.length * s * lhK <= maxH) return { lines, size: s, lh: s * lhK };
+    }
+    ctx.font = fontFn(min);
+    return { lines: wrap(ctx, text, maxW), size: min, lh: min * lhK };
+}
+
+function block(ctx, text, fontFn, cx, top, maxW, maxH, opts = {}) {
+    const f = fit(ctx, text, fontFn, maxW, maxH, opts.max, opts.min, opts.lhK);
+    ctx.font = fontFn(f.size);
+    ctx.textAlign = opts.align || 'center';
+    ctx.textBaseline = 'top';
+    const total = f.lines.length * f.lh;
+    let y = opts.anchor === 'bottom' ? top + maxH - total : top + (opts.valign === 'middle' ? (maxH - total) / 2 : 0);
+    f.lines.forEach(l => {
+        if (opts.stroke) { ctx.lineWidth = f.size / 7; ctx.strokeStyle = opts.stroke; ctx.lineJoin = 'round'; ctx.strokeText(l, cx, y); }
+        ctx.fillText(l, cx, y);
+        y += f.lh;
+    });
+    return { y, size: f.size, total };
+}
+
+function parodyTag(ctx, dark) {
+    ctx.font = '600 22px Oswald, sans-serif';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = dark ? 'rgba(255,255,255,.65)' : 'rgba(10,49,97,.6)';
+    ctx.fillText('★ MEME · NOT REAL ★', W - 28, H - 24);
+}
+
+/* ---------- templates ---------- */
+const TEMPLATES = [
+    {
+        id: 'classic', name: 'Классика',
+        l1: 'Верхний текст', l2: 'Нижний текст',
+        hint: 'Классический мем. Можно загрузить свой фон или оставить флаг.',
+        upload: true,
+        d1: 'When I say it will be',
+        d2: 'The BEST meme ever',
+        phrases: [
+            ['Nobody builds memes', 'Better than me'],
+            ['They said it was impossible', 'I did it. God bless America.'],
+            ['The coffee is cold', 'Only in America'],
+            ['Monday called', 'I fired Monday'],
+        ],
+        draw(ctx, a, img) {
+            if (img) cover(ctx, img, 0, 0, W, H);
+            else { flag(ctx, 0, 0, W, H); ctx.fillStyle = 'rgba(6,31,64,.45)'; ctx.fillRect(0, 0, W, H); }
+            ctx.fillStyle = '#fff';
+            const f = s => `400 ${s}px Anton, Impact, sans-serif`;
+            block(ctx, a.t1.toUpperCase(), f, W / 2, 30, W - 80, 300, { stroke: '#000', max: 120 });
+            block(ctx, a.t2.toUpperCase(), f, W / 2, H - 340, W - 80, 300, { stroke: '#000', anchor: 'bottom', max: 120 });
+            parodyTag(ctx, true);
+        }
+    },
+    {
+        id: 'great', name: 'Only in America',
+        l1: 'Что похвалить', l2: 'Подпись',
+        hint: 'Плакат «THE BEST ___ IN AMERICA». Пиши одно-два слова.',
+        d1: 'Mondays',
+        d2: 'Approved by Eagles',
+        phrases: [['Lunch', 'Approved by hungry eagles'], ['Wi-Fi', 'Approved by patient eagles'], ['Naps', 'Approved by tired eagles'], ['Pizza', 'Approved by Brooklyn']],
+        draw(ctx, a) {
+            const g = ctx.createLinearGradient(0, 0, 0, H);
+            g.addColorStop(0, BLUE); g.addColorStop(1, NAVY);
+            ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = 'rgba(255,255,255,.08)';
+            for (let y = 40; y < H; y += 90) for (let x = (y / 90) % 2 ? 40 : 85; x < W; x += 90) star(ctx, x, y, 14);
+            // щит
+            const cx = W / 2, cy = 62;
+            ctx.fillStyle = '#fff';
+            ctx.beginPath(); ctx.moveTo(cx - 120, cy); ctx.lineTo(cx + 120, cy); ctx.lineTo(cx + 120, cy + 120);
+            ctx.quadraticCurveTo(cx + 120, cy + 215, cx, cy + 250); ctx.quadraticCurveTo(cx - 120, cy + 215, cx - 120, cy + 120); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = RED;
+            ctx.beginPath(); ctx.moveTo(cx - 105, cy + 14); ctx.lineTo(cx + 105, cy + 14); ctx.lineTo(cx + 105, cy + 120);
+            ctx.quadraticCurveTo(cx + 105, cy + 202, cx, cy + 234); ctx.quadraticCurveTo(cx - 105, cy + 202, cx - 105, cy + 120); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = BLUE; ctx.fillRect(cx - 105, cy + 14, 210, 80);
+            ctx.fillStyle = '#fff'; star(ctx, cx, cy + 140, 50);
+            ctx.fillStyle = GOLD; star(ctx, cx - 60, cy + 54, 12); star(ctx, cx, cy + 54, 12); star(ctx, cx + 60, cy + 54, 12);
+            // текст
+            ctx.fillStyle = '#fff';
+            ctx.font = '400 90px Anton, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            ctx.fillText('THE BEST', W / 2, 350);
+            ctx.fillStyle = GOLD;
+            const r = block(ctx, a.t1.toUpperCase(), s => `400 ${s}px Anton, sans-serif`, W / 2, 440, W - 140, 260, { max: 230, valign: 'middle' });
+            ctx.fillStyle = '#fff';
+            ctx.font = '400 90px Anton, sans-serif'; ctx.textBaseline = 'top';
+            ctx.fillText('IN AMERICA', W / 2, 720);
+            // подпись
+            ctx.fillStyle = RED; ctx.fillRect(0, 860, W, 70);
+            ctx.fillStyle = '#fff'; ctx.font = '600 32px Oswald, sans-serif'; ctx.textBaseline = 'middle';
+            ctx.fillText(a.t2.toUpperCase(), W / 2, 896);
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 930, W, 8);
+            parodyTag(ctx, true);
+        }
+    },
+    {
+        id: 'order', name: 'Executive Order',
+        l1: 'Название указа', l2: 'Текст указа',
+        hint: 'Официальный документ с печатью и подписью.',
+        d1: 'On the Banning of Mondays',
+        d2: 'Effective immediately, all Mondays are hereby cancelled. The week shall begin on Tuesday. God bless America.',
+        phrases: [
+            ['On Free Pizza Fridays', 'It is hereby ordered that every Friday shall include pizza. Extra cheese. God bless America.'],
+            ['On the Abolition of Alarm Clocks', 'All alarm clocks are fired. People shall wake up when they feel like it. Great.'],
+            ['On Mandatory Naps', 'Every citizen is entitled to a 30 minute nap after lunch. Liberty and naps for all.'],
+        ],
+        draw(ctx, a) {
+            ctx.fillStyle = '#d9cfb6'; ctx.fillRect(0, 0, W, H);
+            ctx.save();
+            ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 10;
+            ctx.fillStyle = CREAM; ctx.fillRect(60, 40, W - 120, H - 80);
+            ctx.restore();
+            ctx.strokeStyle = BLUE; ctx.lineWidth = 6; ctx.strokeRect(90, 70, W - 180, H - 140);
+            ctx.lineWidth = 2; ctx.strokeRect(102, 82, W - 204, H - 164);
+            // печать
+            const cx = W / 2, cy = 190;
+            ctx.fillStyle = BLUE; ctx.beginPath(); ctx.arc(cx, cy, 70, 0, 7); ctx.fill();
+            ctx.strokeStyle = GOLD; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cx, cy, 58, 0, 7); ctx.stroke();
+            ctx.fillStyle = GOLD; star(ctx, cx, cy, 36);
+            // заголовки
+            ctx.fillStyle = BLUE; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            ctx.font = '900 68px "Playfair Display", serif'; ctx.fillText('EXECUTIVE ORDER', cx, 285);
+            ctx.fillStyle = RED; ctx.fillRect(cx - 200, 370, 400, 4);
+            ctx.fillStyle = BLUE;
+            block(ctx, a.t1, s => `700 ${s}px "Playfair Display", serif`, cx, 395, W - 300, 110, { max: 50, valign: 'middle' });
+            ctx.fillStyle = '#222';
+            block(ctx, a.t2, s => `400 ${s}px "Special Elite", monospace`, cx, 530, W - 300, 250, { max: 38, min: 20, align: 'center', lhK: 1.35 });
+            // подпись
+            ctx.strokeStyle = '#111'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(250, 880); ctx.bezierCurveTo(300, 780, 340, 940, 380, 830);
+            ctx.bezierCurveTo(410, 760, 430, 900, 480, 850);
+            ctx.bezierCurveTo(540, 800, 560, 900, 640, 860); ctx.stroke();
+            ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(230, 905); ctx.lineTo(680, 905); ctx.stroke();
+            ctx.fillStyle = '#444'; ctx.font = '400 22px "Special Elite", monospace'; ctx.textAlign = 'left';
+            ctx.fillText('THE OFFICE OF MEMES', 230, 915);
+            // штамп
+            ctx.save(); ctx.translate(850, 850); ctx.rotate(-0.28);
+            ctx.strokeStyle = RED; ctx.fillStyle = RED; ctx.lineWidth = 6;
+            ctx.strokeRect(-120, -42, 240, 84);
+            ctx.font = '400 54px Anton, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.globalAlpha = .85; ctx.fillText('APPROVED', 0, 3);
+            ctx.restore();
+            ctx.fillStyle = 'rgba(10,49,97,.6)'; ctx.font = '600 20px Oswald, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+            ctx.fillText('★ MEME · NOT A REAL DOCUMENT ★', cx, H - 92);
+        }
+    },
+    {
+        id: 'news', name: 'Breaking News',
+        l1: 'Заголовок', l2: 'Бегущая строка',
+        hint: 'Срочные новости в стиле американского ТВ.',
+        d1: 'Nation Shocked as Coffee Declared "The Best Coffee Ever"',
+        d2: 'MORE ON THIS STORY AT 11  ★  EXPERTS SAY IT IS VERY HOT  ★  AMERICA IS TALKING ABOUT IT',
+        phrases: [
+            ['Local Man Wins Argument With Himself, Calls It "Major Victory"', 'LIVE FROM THE KITCHEN  ★  UNDEFEATED SINCE BREAKFAST  ★  MORE AFTER THE BREAK'],
+            ['Pizza Officially Declared a Vegetable', 'SOURCES CONFIRM  ★  FRIDAY LUNCH WILL NEVER BE THE SAME  ★  STAY TUNED'],
+            ['Breaking: Nap Time Extended to Four Hours', 'EXCLUSIVE  ★  WORKERS CHEER  ★  ALARM CLOCK MAKERS WORRIED'],
+        ],
+        draw(ctx, a) {
+            const g = ctx.createLinearGradient(0, 0, W, H);
+            g.addColorStop(0, BLUE); g.addColorStop(1, NAVY);
+            ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = 'rgba(255,255,255,.05)';
+            for (let i = -H; i < W; i += 70) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + 30, 0); ctx.lineTo(i + 30 + H, H); ctx.lineTo(i + H, H); ctx.fill(); }
+            // LIVE
+            ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(80, 76, 14, 0, 7); ctx.fill();
+            ctx.fillStyle = '#fff'; ctx.font = '700 38px Oswald, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+            ctx.fillText('LIVE', 108, 78);
+            ctx.textAlign = 'right'; ctx.fillStyle = GOLD; ctx.fillText('★ USA 24', W - 50, 78);
+            // BREAKING
+            ctx.fillStyle = RED; ctx.fillRect(0, 150, 560, 110);
+            ctx.fillStyle = '#fff'; ctx.fillRect(560, 150, 16, 110);
+            ctx.font = '400 78px Anton, sans-serif'; ctx.textAlign = 'left';
+            ctx.fillText('BREAKING NEWS', 40, 208);
+            // заголовок
+            ctx.fillStyle = '#fff';
+            block(ctx, a.t1.toUpperCase(), s => `400 ${s}px Anton, sans-serif`, 60, 320, W - 120, 440, { align: 'left', max: 130, valign: 'middle', lhK: 1.12 });
+            // тикер
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 830, W, 130);
+            ctx.fillStyle = BLUE; ctx.fillRect(0, 830, 190, 130);
+            ctx.fillStyle = '#fff'; ctx.font = '400 44px Anton, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText('NEWS', 95, 896);
+            ctx.save(); ctx.beginPath(); ctx.rect(200, 830, W - 200, 130); ctx.clip();
+            ctx.fillStyle = BLUE; ctx.font = '600 40px Oswald, sans-serif'; ctx.textAlign = 'left';
+            let tx = a.t2.toUpperCase();
+            while (ctx.measureText(tx).width > W - 240 && tx.length > 4) tx = tx.slice(0, -2);
+            if (tx !== a.t2.toUpperCase()) tx = tx.trimEnd() + '…';
+            ctx.fillText(tx, 215, 896);
+            ctx.restore();
+            ctx.fillStyle = RED; ctx.fillRect(0, 960, W, 8);
+            parodyTag(ctx, true);
+            ctx.textAlign = 'left'; ctx.font = '600 22px Oswald, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.65)';
+            ctx.fillText('SATIRE', 28, H - 24);
+        }
+    }
+];
+
+/* ---------- state ---------- */
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const $ = id => document.getElementById(id);
+let current = TEMPLATES[0];
+let bgImage = null;
+const values = {};
+TEMPLATES.forEach(t => values[t.id] = { t1: t.d1, t2: t.d2 });
+
+function render() {
+    ctx.clearRect(0, 0, W, H);
+    current.draw(ctx, values[current.id], current.upload ? bgImage : null);
+}
+
+function drawThumbs() {
+    TEMPLATES.forEach(t => {
+        const c = t.thumb, x = c.getContext('2d');
+        const full = document.createElement('canvas'); full.width = W; full.height = H;
+        t.draw(full.getContext('2d'), values[t.id], t.upload ? bgImage : null);
+        x.drawImage(full, 0, 0, c.width, c.height);
+    });
+}
+
+function select(t) {
+    current = t;
+    document.querySelectorAll('.tpl').forEach(el => el.classList.toggle('active', el.dataset.id === t.id));
+    $('l1').textContent = t.l1; $('l2').textContent = t.l2; $('hint').textContent = t.hint;
+    $('t1').value = values[t.id].t1; $('t2').value = values[t.id].t2;
+    $('uploadWrap').style.display = t.upload ? '' : 'none';
+    render();
+}
+
+/* ---------- init ---------- */
+const tplBox = $('templates');
+TEMPLATES.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'tpl'; b.dataset.id = t.id;
+    t.thumb = document.createElement('canvas'); t.thumb.width = 360; t.thumb.height = 360;
+    b.appendChild(t.thumb);
+    b.appendChild(document.createTextNode(t.name));
+    b.addEventListener('click', () => select(t));
+    tplBox.appendChild(b);
+});
+
+['t1', 't2'].forEach(k => $(k).addEventListener('input', e => {
+    values[current.id][k] = e.target.value; render();
+}));
+
+$('random').addEventListener('click', () => {
+    const p = current.phrases[Math.floor(Math.random() * current.phrases.length)];
+    values[current.id] = { t1: p[0], t2: p[1] };
+    $('t1').value = p[0]; $('t2').value = p[1]; render();
+});
+
+$('upload').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    const img = new Image();
+    img.onload = () => { bgImage = img; render(); drawThumbs(); URL.revokeObjectURL(img.src); };
+    img.src = URL.createObjectURL(f);
+});
+
+$('download').addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.download = `meme-${current.id}.png`;
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+});
+
+/* ждём шрифты, затем рисуем */
+const fontLoads = ['400 60px Anton', '600 30px Oswald', '700 30px Oswald', '900 40px "Playfair Display"', '700 40px "Playfair Display"', '400 30px "Special Elite"'];
+Promise.all(fontLoads.map(f => document.fonts.load(f))).catch(() => {}).then(() => {
+    select(current); drawThumbs();
+});
+const startId = new URLSearchParams(location.search).get('t');
+const start = TEMPLATES.find(t => t.id === startId) || TEMPLATES[0];
+select(start); drawThumbs();
+</script>
+</body>
+</html>
